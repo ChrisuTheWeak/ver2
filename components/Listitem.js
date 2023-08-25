@@ -21,7 +21,7 @@ return (
 )
 }
 
-Listitem.PropTypes = {
+Listitem.propTypes = {
   singleMedia: PropTypes.object,
 }
 export default Listitem;

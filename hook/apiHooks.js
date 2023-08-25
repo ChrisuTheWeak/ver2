@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiUrl } from "../utils/app-config";
-import { doFetch } from "../Utils/func";
+import { doFetch } from "../utils/func";
 
 
 const useMedia = () => {

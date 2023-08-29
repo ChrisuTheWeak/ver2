@@ -32,9 +32,10 @@ const styles1 = StyleSheet.create({
     justifyContent: 'top',
     paddingTop: 40,
   }, image:{
-    width: '80%',
-    paddingTop: '100%',
-    //height: '50%',
+    width: '100%',
+    paddingTop: '10',
+    resizeMode:'contain',
+    height: '70%',
     margin: 5,
     borderRadius: 15,
   },

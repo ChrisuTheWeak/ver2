@@ -2,11 +2,13 @@ import {Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import {mediaUrl} from '../utils/app-config';
 
-const ListItem = ({singleMedia}) => {
+
+const ListItem = ({singleMedia, navigation}) => {
   return (
     <TouchableOpacity style={styles.item}
       onPress={() => {
         console.log('touched!', singleMedia.title);
+        navigation.navigate('Single',singleMedia);
       }}
     >
       <Image
@@ -21,6 +23,7 @@ const ListItem = ({singleMedia}) => {
 
 ListItem.propTypes = {
   singleMedia: PropTypes.object,
+  navigation: PropTypes.object,
 };
 
 const styles = StyleSheet.create({

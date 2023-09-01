@@ -8,9 +8,12 @@ import {
 import PropTypes from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthentication } from '../hook/apiHooks';
 
-const Login = ({navigation}) => { // props is needed for navigation
+const Login = ({navigation}) => {
+  // props is needed for navigation
   const {setIsLoggedIn} = useContext(MainContext);
+  const {postLogin} = useAuthentication();
 
   const checkToken = async () => {
     try{
@@ -28,6 +31,11 @@ const Login = ({navigation}) => { // props is needed for navigation
   const logIn = async () => {
       console.log('Button pressed');
       try{
+      const loginResponse = await postLogin({
+        username:'poop',
+        password:'boob',
+      });
+      console.log('postLogin', loginResponse);
       await AsyncStorage.setItem('userToken', 'abcd')
       setIsLoggedIn(true);
     }catch (error) {

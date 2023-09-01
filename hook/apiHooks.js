@@ -36,7 +36,8 @@ const useMedia = () => {
 
     const postLogin = async (userCredentials) => {
       try{
-        await doFetch(apiUrl + 'login', {
+        // console.log('testi',apiUrl + 'login',userCredentials)
+       return await doFetch(apiUrl + 'login', {
           method:'POST',
           headers:{
             'Content-Type':'application/json'
@@ -60,7 +61,19 @@ const useMedia = () => {
 
     return {postLogin};
  };
+ const useUser = () => {
+
+  const getUserByToken = async (token) => {
+      const options = {
+        method: 'GET',
+        headers: {'x-access-token': token},
+      };
+      return await doFetch(apiUrl + 'users/user', options);
+  };
+
+  return {getUserByToken};
+ };
 
 
 
-export { useMedia,useAuthentication };
+export { useMedia, useAuthentication, useUser };

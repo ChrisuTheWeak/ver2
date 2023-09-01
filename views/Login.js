@@ -3,12 +3,12 @@ import {
   StyleSheet,
   View,
   Text,
-  Button,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthentication, useUser } from '../hook/apiHooks';
+import LoginForm from '../components/LoginForm';
 
 const Login = ({navigation}) => {
   // props is needed for navigation
@@ -32,24 +32,11 @@ const Login = ({navigation}) => {
   useEffect (() => {
     checkToken();
   },[]);
-  const logIn = async () => {
-      console.log('Button pressed');
-      try{
-      const loginResponse = await postLogin({
-        username:'Chrisu',
-        password:'pokale',
-      });
-      console.log('postLogin', loginResponse);
-      await AsyncStorage.setItem('userToken', loginResponse.token);
-      setIsLoggedIn(true);
-    }catch (error) {
-      console.error(error);
-    }
-  };
+
   return (
     <View style={styles.container}>
       <Text>Login</Text>
-      <Button title="Sign in!" onPress={logIn}/>
+      <LoginForm />
     </View>
   );
 };

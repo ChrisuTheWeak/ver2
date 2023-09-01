@@ -19,7 +19,7 @@ const LoginForm = () => {
     },
   })
 
-const {setIsLoggedIn} = useContext(MainContext);
+const {setIsLoggedIn, setUser} = useContext(MainContext);
 const {postLogin} = useAuthentication();
 
   const logIn = async (loginData) => {
@@ -29,6 +29,7 @@ const {postLogin} = useAuthentication();
     console.log('postLogin', loginResponse);
     await AsyncStorage.setItem('userToken', loginResponse.token);
     setIsLoggedIn(true);
+    setUser(loginResponse.user);
   }catch (error) {
     console.error(error);
   }
@@ -46,6 +47,7 @@ const {postLogin} = useAuthentication();
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            autoCapitalize='none'
           />
         )}
         name="username"
@@ -60,6 +62,8 @@ const {postLogin} = useAuthentication();
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             placeholder="password"
+            autoCapitalize='none'
+            secureTextEntry
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

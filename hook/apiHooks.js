@@ -71,9 +71,24 @@ const useMedia = () => {
       return await doFetch(apiUrl + 'users/user', options);
   };
 
-  return {getUserByToken};
+  return {getUserByToken };
  };
 
+ const registerUser = () =>{
+  const postUser= async (userData) =>{
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(userData),
+  };
+;
+  return await doFetch(apiUrl + 'users', options);
+}
+return {postUser};
+};
 
 
-export { useMedia, useAuthentication, useUser };
+
+export { useMedia, useAuthentication, useUser, registerUser };

@@ -7,6 +7,10 @@ import { mediaUrl } from '../utils/app-config';
 const Single = ({route,navigation}) => {
   const singleMedia = route.params;
 
+  //const formatDate = new Date(singleMedia.time_added).toLocaleDateString('en-US', {
+    //hour12: false
+ // });
+
   return (
     <SafeAreaView style={styles1.container}>
       <Image

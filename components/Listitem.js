@@ -1,23 +1,31 @@
 import {Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import {mediaUrl} from '../utils/app-config';
+import {Button, Card, ListItem as RNEListItem} from '@rneui/themed';
+
+
 
 
 const ListItem = ({singleMedia, navigation}) => {
   return (
-    <TouchableOpacity style={styles.item}
+
+    <TouchableOpacity
       onPress={() => {
         console.log('touched!', singleMedia.title);
         navigation.navigate('Single',singleMedia);
       }}
     >
-      <Image
-        style={styles.image}
+
+      <Card.Image
         source={{uri: mediaUrl + singleMedia.thumbnails.w160}}
       />
-      <Text style={styles.title}>{singleMedia.title}</Text>
-      <Text style={styles.desc}>{singleMedia.description}</Text>
+      <RNEListItem>
+      <RNEListItem.Title>{singleMedia.title}</RNEListItem.Title>
+      <RNEListItem.Subtitle>{singleMedia.description}</RNEListItem.Subtitle>
+      </RNEListItem>
+
     </TouchableOpacity>
+
   );
 };
 

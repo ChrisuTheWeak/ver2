@@ -4,6 +4,8 @@ import { MainContext } from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTag } from '../hook/apiHooks';
 import { mediaUrl } from '../utils/app-config';
+import { Card, Icon, ListItem, } from '@rneui/themed';
+
 
 
 const Profile = () => {
@@ -33,27 +35,40 @@ const {getFilesByTag} = useTag();
     loadAvatar();
   }, []);
   return (
-    <SafeAreaView style={styles.container}>
+  <Card>
       <Text>Profile</Text>
-      <Text>{user.username}</Text>
-      <Image style={styles.Image} source={{uri: avatar}}/>
-      <Text>{user.email}</Text>
-      <Button title='Log out !!!' onPress={logOut}/>
-    </SafeAreaView>
+      <Card.Title>{user.username}</Card.Title>
+
+      <Card.Divider/>
+
+      <Card.Image source={{uri: avatar}}/>
+
+      <ListItem>
+        <ListItem.Title>{user.email}</ListItem.Title>
+        </ListItem>
+
+        <ListItem>
+          <Icon name='person'></Icon>
+        <ListItem.Title>{user.username}</ListItem.Title>
+        </ListItem>
+
+        {user.full_name &&(
+           <ListItem>
+           <Icon name='person'></Icon>
+         <ListItem.Title>{user.full_name}</ListItem.Title>
+         </ListItem>
+        )}
+
+        <ListItem>
+          <Icon name=''></Icon>
+        <ListItem.Title>ID: {user.user_id}</ListItem.Title>
+        </ListItem>
+
+      <Button  title='Log out !!!' onPress={logOut}/>
+  </Card>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 40,
-  },Image:{
-    width:300,
-    height:300,
-  }
-});
+
 
 export default Profile;

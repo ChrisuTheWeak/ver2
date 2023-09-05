@@ -104,5 +104,5 @@ const onSubmit = (data) => register(data);
     </View>
   )
 };
-
+//comment
 export default RegisterForm

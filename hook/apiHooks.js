@@ -4,6 +4,7 @@ import { doFetch } from "../utils/func";
 
 
 
+
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
 
@@ -89,6 +90,19 @@ const useMedia = () => {
 return {postUser};
 };
 
+const useTag = () => {
+  const getFilesByTag = async (tag) => {
+    try {
+    return await doFetch(apiUrl + 'tags/' + tag);
+
+  }catch (error){
+    throw new Error('getFilesByTag: error' + error.message);
+
+  }
+ };
+ return {getFilesByTag};
+};
 
 
-export { useMedia, useAuthentication, useUser, registerUser };
+
+export { useMedia, useAuthentication, useUser, registerUser, useTag };

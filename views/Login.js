@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,18 +10,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthentication, useUser } from '../hook/apiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import { Button } from '@rneui/base';
 
 const Login = ({navigation}) => {
   // props is needed for navigation
   const {setIsLoggedIn,setUser} = useContext(MainContext);
   const {postLogin} = useAuthentication();
   const {getUserByToken} = useUser();
+  const [toggleRegister, setToggleRegiseter]= useState(false);
+  //const [buttonTitle, setButtonTitle]= useState('or Register here.')
 
   const checkToken = async () => {
     try{
       const token = await AsyncStorage.getItem('userToken');
       const userData = await getUserByToken(token);
-      console.log ('userdata',userData);
+      //console.log ('userdata',userData);
       if (userData){
         setIsLoggedIn(true);
         setUser(userData);
@@ -38,8 +41,13 @@ const Login = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text>Login</Text>
-      <LoginForm />
-      <RegisterForm/>
+
+      {toggleRegister ? <RegisterForm/>: <LoginForm />}
+
+      <Button onPress={()=>{
+        setToggleRegiseter (!toggleRegister);
+      }}
+      >{toggleRegister ?"or Login" : "or Register" }</Button>
     </View>
   );
 };

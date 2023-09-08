@@ -11,7 +11,7 @@ const ListItem = ({singleMedia, navigation}) => {
 
     <TouchableOpacity
       onPress={() => {
-        console.log('touched!', singleMedia.title);
+        //console.log('touched!', singleMedia.title);
         navigation.navigate('Single',singleMedia);
       }}
     >

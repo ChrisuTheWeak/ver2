@@ -7,6 +7,7 @@ import Single from '../views/Single';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '../views/Login';
 import { MainContext } from '../contexts/MainContext';
+import { Icon } from '@rneui/themed';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -14,7 +15,9 @@ const Stack = createNativeStackNavigator();
 const Tabscreen = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={Home}></Tab.Screen>
+      <Tab.Screen name="Home" component={Home}
+      options={{tabBarIcon: ({color})=> <Icon name="home" color={color}/>}}
+      ></Tab.Screen>
       <Tab.Screen name="Profile" component={Profile}></Tab.Screen>
     </Tab.Navigator>
   );

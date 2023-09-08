@@ -1,23 +1,39 @@
-
 import React, {useContext} from 'react';
 import {useForm, Controller} from 'react-hook-form';
-import {checkUsername, registerUser, userCheck} from '../hook/apiHooks';
-import { Card, Input,Button,Text } from '@rneui/themed';
-import { Alert } from 'react-native';
+import {checkUsername, putUser,registerUser, userCheck, useUser} from '../hook/apiHooks';
+import {Card, Input, Button, Text} from '@rneui/themed';
+import {Alert} from 'react-native';
 import PropTypes from 'prop-types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MainContext } from '../contexts/MainContext';
 
-const RegisterForm = ({setToggleRegister}) => {
+const ProfileFrom = ({user}) => {
   const {postUser} = registerUser();
   const {userCheck} = checkUsername();
-  const register = async (data) => {
+  const {puteUser} = putUser();
+  const {getUserByToken} = useUser();
+  const {setUser} = useContext(MainContext);
+
+  const update = async (dataUpdate) => {
     try {
-      delete data.Confirm_password;
-      const loginResponse = await postUser(data);
-      console.log('postRegister', loginResponse);
-      Alert.alert('Succ-ess', loginResponse.message);
-      setToggleRegister(false);
+      delete dataUpdate.Confirm_password;
+      for (const [i, value] of Object.entries(dataUpdate)) {
+        console.log(i, value);
+        if (value === '') {
+          delete dataUpdate[i];
+        }
+      }
+      console.log('ei salee toimi', dataUpdate,);
+      const token = await AsyncStorage.getItem('userToken');
+      console.log(token);
+      const updateResponse = await puteUser(dataUpdate, token);
+      console.log('postRegister', updateResponse);
+      Alert.alert('Succ-ess', updateResponse.message);
+      //setToggleRegister(false);
+      const userData = await getUserByToken (token);
+      setUser(userData);
     } catch (error) {
-      //console.error(error);
+      console.error(error);
       Alert.alert('Error', error.message);
     }
   };
@@ -27,24 +43,21 @@ const RegisterForm = ({setToggleRegister}) => {
     getValues,
     formState: {errors},
   } = useForm({
-    defaultValues: {
-      username: '',
-      password: '',
-      email: '',
-      full_name: '',
-    },
+    defaultValues: {...user, password:'',Confirm_password: '',},
     mode: 'onBlur',
   });
-  const onSubmit = (data) => register(data);
+  const onSubmit = (dataUpdate) => update(dataUpdate);
   return (
     <Card>
       <Controller
         control={control}
         rules={{
-          required: true,
           minLength: 3,
           validate: async (value) => {
             try {
+              if (value.length < 3) {
+                return;
+              }
               const isAvailable = await userCheck(value);
               console.log('Username Available? ', value, isAvailable);
               return isAvailable ? isAvailable : 'Username taken';
@@ -71,7 +84,7 @@ const RegisterForm = ({setToggleRegister}) => {
 
       <Controller
         control={control}
-        rules={{ required:true,
+        rules={{
           minLength: {value: 3, message: 'This is required.and 3 characters'},
         }}
         render={({field: {onChange, onBlur, value}}) => (
@@ -91,10 +104,12 @@ const RegisterForm = ({setToggleRegister}) => {
       <Controller
         control={control}
         rules={{
-          required: {value: true, message: 'This is required.'},
           validate: (value) => {
             const {password} = getValues();
-           console.log('getValues: password:', password , value);
+            console.log('getValues: password:', password, value);
+            if (password.length === 0) {
+              return;
+            }
             return value === password ? true : 'Passwords dont match!';
           },
         }}
@@ -114,7 +129,6 @@ const RegisterForm = ({setToggleRegister}) => {
       <Controller
         control={control}
         rules={{
-          required: {value: true, message: 'This is required.'},
           minLength: 3,
           pattern: {
             value: /^\S+@\S+\.\S+$/,
@@ -151,11 +165,11 @@ const RegisterForm = ({setToggleRegister}) => {
         name="full_name"
       />
 
-      <Button title="Register" onPress={handleSubmit(onSubmit)} />
+      <Button title="Update !!" onPress={handleSubmit(onSubmit)} />
     </Card>
   );
 };
-RegisterForm.propTypes ={
-  setToggleRegister: PropTypes.func,
+ProfileFrom.propTypes = {
+  user: PropTypes.object,
 };
-export default RegisterForm;
+export default ProfileFrom;

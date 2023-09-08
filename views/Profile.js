@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {StyleSheet, SafeAreaView, Text, Button, Image} from 'react-native';
+import {StyleSheet, SafeAreaView, Text, Button, Image, ScrollView} from 'react-native';
 import { MainContext } from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTag } from '../hook/apiHooks';
 import { mediaUrl } from '../utils/app-config';
 import { Card, Icon, ListItem, } from '@rneui/themed';
+import ProfileFrom from '../components/ProfileForm';
 
 
 
@@ -35,6 +36,7 @@ const {getFilesByTag} = useTag();
     loadAvatar();
   }, []);
   return (
+<ScrollView>
   <Card>
       <Text>Profile</Text>
       <Card.Title>{user.username}</Card.Title>
@@ -65,7 +67,9 @@ const {getFilesByTag} = useTag();
         </ListItem>
 
       <Button  title='Log out !!!' onPress={logOut}/>
+      <ProfileFrom user={user}/>
   </Card>
+</ScrollView>
   );
 };
 

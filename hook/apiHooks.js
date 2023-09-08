@@ -32,8 +32,6 @@ const useMedia = () => {
 
 const useAuthentication = () => {
   const postLogin = async (userCredentials) => {
-    try {
-      // console.log('testi',apiUrl + 'login',userCredentials)
       return await doFetch(apiUrl + 'login', {
         method: 'POST',
         headers: {
@@ -41,18 +39,7 @@ const useAuthentication = () => {
         },
         body: JSON.stringify(userCredentials),
       });
-    } catch (error) {
-      console.error('postloginfailed', error);
-    }
-    // user credentials format: {username: 'someUsername', password: 'somePassword'}
-    const options = {
-      // TODO: add method, headers and body for sending json data with POST
-    };
-    try {
-      // TODO: use fetch to send request to login endpoint and return the result as json, handle errors with try/catch and response.ok
-    } catch (error) {
-      throw new Error(error.message);
-    }
+
   };
 
   return {postLogin};
@@ -106,6 +93,21 @@ const useTag = () => {
   };
   return {getFilesByTag};
 };
+const putUser = () => {
+  const puteUser = async (userData, token) => {
+    const options = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(userData),
+    };
+    return await doFetch(apiUrl + 'users', options);
+  };
+
+  return {puteUser};
+};
 
 export {
   useMedia,
@@ -114,4 +116,5 @@ export {
   registerUser,
   useTag,
   checkUsername,
+  putUser,
 };

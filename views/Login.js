@@ -1,68 +1,63 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleSheet, View, Text} from 'react-native';
 import PropTypes from 'prop-types';
-import { MainContext } from '../contexts/MainContext';
+import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuthentication, useUser } from '../hook/apiHooks';
+import {useAuthentication, useUser} from '../hook/apiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import { Button } from '@rneui/base';
+import {Button, Card} from '@rneui/base';
 
 const Login = ({navigation}) => {
   // props is needed for navigation
-  const {setIsLoggedIn,setUser} = useContext(MainContext);
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {postLogin} = useAuthentication();
   const {getUserByToken} = useUser();
-  const [toggleRegister, setToggleRegiseter]= useState(false);
+  const [toggleRegister, setToggleRegister] = useState(false);
   //const [buttonTitle, setButtonTitle]= useState('or Register here.')
 
   const checkToken = async () => {
-    try{
+    try {
       const token = await AsyncStorage.getItem('userToken');
       const userData = await getUserByToken(token);
       //console.log ('userdata',userData);
-      if (userData){
+      if (userData) {
         setIsLoggedIn(true);
         setUser(userData);
       }
-    }catch (error){
-      console.log('Check Token:Login.js',error);
+    } catch (error) {
+      console.log('Check Token:Login.js', error);
     }
-  }
+  };
 
-  useEffect (() => {
+  useEffect(() => {
     checkToken();
-  },[]);
+  }, []);
 
   return (
-    <View style={styles.container}>
+    <Card>
       <Text>Login</Text>
 
-      {toggleRegister ? <RegisterForm/>: <LoginForm />}
+      {toggleRegister ? (
+        <RegisterForm setToggleRegister={setToggleRegister} />
+      ) : (
+        <LoginForm />
+      )}
 
-      <Button onPress={()=>{
-        setToggleRegiseter (!toggleRegister);
-      }}
-      >{toggleRegister ?"or Login" : "or Register" }</Button>
-    </View>
+      <Button
+        onPress={() => {
+          setToggleRegister(!toggleRegister);
+        }}
+      >
+        {toggleRegister ? 'or Login' : 'or Register'}
+      </Button>
+    </Card>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
 Login.propTypes = {
-  navigation: PropTypes.object, Login: PropTypes.object,
+  navigation: PropTypes.object,
+  Login: PropTypes.object,
 };
 
 export default Login;

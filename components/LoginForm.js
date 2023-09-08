@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Button } from 'react-native'
+import { View, Text, TextInput, Button, Alert } from 'react-native'
 import React, { useContext } from 'react'
 import { useForm, Controller } from "react-hook-form";
 import { useAuthentication } from '../hook/apiHooks';
@@ -31,7 +31,7 @@ const {postLogin} = useAuthentication();
     setIsLoggedIn(true);
     setUser(loginResponse.user);
   }catch (error) {
-    console.error(error);
+    Alert.alert('Error: ', error.message);
   }
 };
   return (
@@ -48,6 +48,7 @@ const {postLogin} = useAuthentication();
             onChangeText={onChange}
             value={value}
             autoCapitalize='none'
+            errorMessage= {errors.username?.message}
           />
         )}
         name="username"
@@ -58,6 +59,7 @@ const {postLogin} = useAuthentication();
         control={control}
         rules={{
           maxLength: 100,
+          required:{value:true, message: 'is required.'},
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
@@ -67,6 +69,7 @@ const {postLogin} = useAuthentication();
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            errorMessage= {errors.password?.message}
           />
         )}
         name="password"

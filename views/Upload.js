@@ -6,7 +6,7 @@ import {useContext, useState} from 'react';
 import {appId, placeholderImage} from '../utils/app-config';
 import {Video} from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useMedia, useTag} from '../hooks/ApiHooks';
+import {useMedia, useTag} from '../hook/apiHooks';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 
@@ -15,7 +15,7 @@ const Upload = ({navigation}) => {
   const [image, setImage] = useState(placeholderImage);
   const [type, setType] = useState('image');
   const {postMedia, loading} = useMedia();
-  const {postTag} = useTag();
+  const {getFilesByTag} = useTag();
   const {
     control,
     reset,
@@ -49,7 +49,7 @@ const Upload = ({navigation}) => {
       const token = await AsyncStorage.getItem('userToken');
       const response = await postMedia(formData, token);
       console.log('lataus', response);
-      const tagResponse = await postTag(
+      const tagResponse = await getFilesByTag(
         {
           file_id: response.file_id,
           tag: appId,

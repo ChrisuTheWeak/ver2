@@ -1,13 +1,14 @@
 import {useEffect, useState} from 'react';
-import {apiUrl} from '../utils/app-config';
+import {apiUrl, appId} from '../utils/app-config';
 import {doFetch} from '../utils/func';
 
-const useMedia = () => {
+const useMedia = (update) => {
   const [mediaArray, setMediaArray] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const loadMedia = async () => {
     try {
-      const json = await doFetch(apiUrl + 'media');
+      const json = await doFetch(apiUrl + 'media/' );
       // console.log(json);
       const mediaFiles = await Promise.all(
         json.map(async (item) => {
@@ -25,9 +26,28 @@ const useMedia = () => {
 
   useEffect(() => {
     loadMedia();
-  }, []);
+  }, [update]);
 
-  return {mediaArray};
+  const postMedia = async (mediaData, token) => {
+    setLoading(true);
+    try {
+      const options = {
+        method: 'POST',
+        headers: {
+          'x-access-token': token,
+        },
+        body: mediaData,
+      };
+      const uploadResult = await doFetch(apiUrl + 'media', options);
+      return uploadResult;
+    } catch (error) {
+      throw new Error('postMedia failed: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {mediaArray, postMedia};
 };
 
 const useAuthentication = () => {

@@ -80,4 +80,4 @@ const {postLogin} = useAuthentication();
   )
 }
 
-export default LoginForm
+export default LoginForm;

@@ -8,6 +8,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '../views/Login';
 import { MainContext } from '../contexts/MainContext';
 import { Icon } from '@rneui/themed';
+import  Upload  from '../views/Upload';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -18,7 +19,14 @@ const Tabscreen = () => {
       <Tab.Screen name="Home" component={Home}
       options={{tabBarIcon: ({color})=> <Icon name="home" color={color}/>}}
       ></Tab.Screen>
-      <Tab.Screen name="Profile" component={Profile}></Tab.Screen>
+
+      <Tab.Screen name="Profile" component={Profile}
+      options={{tabBarIcon: ({color})=> <Icon name="person" color={color}/>}}
+      ></Tab.Screen>
+
+      <Tab.Screen name="Upload" component={Upload}
+      options={{tabBarIcon: ({color})=> <Icon name="cloud-upload" color={color}/>}}
+      ></Tab.Screen>
     </Tab.Navigator>
   );
 };

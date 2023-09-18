@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
 const apiUrl = "https://media.mw.metropolia.fi/wbma/";
 const mediaUrl = "https://media.mw.metropolia.fi/wbma/uploads/";
-export { apiUrl, mediaUrl };
+const placeholderImage = 'https://place-hold.it/300x200&text=Choose';
+//const appId = 'hfdsjklah';
+export { apiUrl, mediaUrl ,placeholderImage , };

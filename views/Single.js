@@ -1,61 +1,79 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, SafeAreaView, Text, Image} from 'react-native';
-import { mediaUrl } from '../utils/app-config';
+import {mediaUrl} from '../utils/app-config';
+import {formatDate} from '../utils/func';
+import {Card, Icon, Text, ListItem} from '@rneui/themed';
+import {Video} from 'expo-av';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { userID } from '../hook/apiHooks';
 
+const Single = ({route, navigation}) => {
+  const [owner, setOwner] = useState({});
+  const {getUserById} = userID();
+  const {
+    title,
+    description,
+    filename,
+    time_added: timeAdded,
+    user_id: userId,
+    filesize,
+    media_type: mediaType,
+  } = route.params;
 
-const Single = ({route,navigation}) => {
-  const singleMedia = route.params;
+  // fetch owner info
+  const fetchOwner = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const ownerData = await getUserById(userId, token);
+      setOwner(ownerData);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
-  //const formatDate = new Date(singleMedia.time_added).toLocaleDateString('en-US', {
-    //hour12: false
- // });
+  useEffect(() => {
+    fetchOwner();
+  }, []);
 
+  // Show full image and metadata
   return (
-    <SafeAreaView style={styles1.container}>
-      <Image
-        style={styles1.image}
-        source={{uri: mediaUrl + singleMedia.thumbnails.w160}}
-      />
-      <Text>{singleMedia.title}</Text>
-      <Text style={styles1.desc}>{singleMedia.description}</Text>
-      <Text style={styles1.data}>ID: {singleMedia.file_id}{"\n"}
-       Posted By: {singleMedia.user_id}{"\n"}
-       Time: {singleMedia.time_added}</Text>
-
-
-    </SafeAreaView>
+    <Card>
+      <Card.Title>{title}</Card.Title>
+      {mediaType === 'image' ? (
+        <Card.Image
+          source={{uri: mediaUrl + filename}}
+          resizeMode="center"
+          style={{height: 300}}
+        />
+      ) : (
+        <Video
+          source={{uri: mediaUrl + filename}}
+          style={{height: 300}}
+          useNativeControls={true}
+          shouldPlay={true}
+          isLooping={true}
+        />
+      )}
+      <ListItem>
+        <Text>{description}</Text>
+      </ListItem>
+      <ListItem>
+        <Icon name="save" />
+        <Text>{Math.round(filesize / 1024)} kB</Text>
+      </ListItem>
+      <ListItem>
+        <Icon name="today" />
+        <Text>{formatDate(timeAdded)}</Text>
+      </ListItem>
+      <ListItem>
+        <Icon name="person" />
+        <Text>username: {owner.username}</Text>
+      </ListItem>
+    </Card>
   );
 };
 
-const styles1 = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'top',
-    paddingTop: 40,
-  }, image:{
-    width: '100%',
-    paddingTop: '10',
-    resizeMode:'contain',
-    height: '70%',
-    margin: 5,
-    borderRadius: 15,
-  },
-  desc:{
-    margin:30,
-    padding:1,
-    color:'green',
-  },
-  data:{
-    fontSize:10,
-    backgroundColor:'lightgreen',
-  }
-
-
-});
-Single.propTypes ={
+Single.propTypes = {
   navigation: PropTypes.object,
   route: PropTypes.object,
 };

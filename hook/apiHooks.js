@@ -32,14 +32,13 @@ const useMedia = () => {
 
 const useAuthentication = () => {
   const postLogin = async (userCredentials) => {
-      return await doFetch(apiUrl + 'login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userCredentials),
-      });
-
+    return await doFetch(apiUrl + 'login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userCredentials),
+    });
   };
 
   return {postLogin};
@@ -109,6 +108,64 @@ const putUser = () => {
   return {puteUser};
 };
 
+const userID = () => {
+  const getUserById = async (id, token) => {
+    const response = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(apiUrl + 'users/' + id, response);
+  };
+  return {getUserById};
+};
+
+const useFavourite = () => {
+  const postFavourite = async (favourite, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(favourite),
+    };
+    return await doFetch(apiUrl + 'favourites', options);
+  };
+
+  const deleteFavourite = async (id, token) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(apiUrl + 'favourites/file/' + id, options);
+  };
+
+  const getFavouritesById = async (id) => {
+    return await doFetch(apiUrl + 'favourites/file/' + id);
+  };
+
+  const getFavouritesByToken = async (token) => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(apiUrl + 'favourites', options);
+  };
+
+  return {
+    postFavourite,
+    deleteFavourite,
+    getFavouritesById,
+    getFavouritesByToken,
+  };
+};
+
 export {
   useMedia,
   useAuthentication,
@@ -117,4 +174,6 @@ export {
   useTag,
   checkUsername,
   putUser,
+  userID,
+  useFavourite,
 };

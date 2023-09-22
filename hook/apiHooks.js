@@ -1,14 +1,23 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {apiUrl, appId} from '../utils/app-config';
 import {doFetch} from '../utils/func';
+import { MainContext } from '../contexts/MainContext';
 
-const useMedia = (update) => {
+const useMedia = (update, myFilesOnly) => {
+  const {user} = useContext(MainContext);
   const [mediaArray, setMediaArray] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const loadMedia = async () => {
+  const loadMedia = async (userId) => {
     try {
-      const json = await doFetch(apiUrl + 'media/' );
+      let json;
+      if (userId){
+         json = await doFetch(apiUrl + 'media/user/' + userId);
+      } else {
+        json = await doFetch(apiUrl + 'tags/' + appId);
+       //json = await doFetch(apiUrl + 'media' );
+       json.reverse();
+      }
       // console.log(json);
       const mediaFiles = await Promise.all(
         json.map(async (item) => {
@@ -25,6 +34,9 @@ const useMedia = (update) => {
   };
 
   useEffect(() => {
+    if (myFilesOnly) {
+      loadMedia(user.user_id);
+    }
     loadMedia();
   }, [update]);
 
@@ -46,8 +58,41 @@ const useMedia = (update) => {
       setLoading(false);
     }
   };
+  const deleteMedia = async (fileId, token) => {
+    try {
+      const options = {
+        method: 'DELETE',
+        headers: {
+          'x-access-token': token,
+        },
+      };
+      const deleteResult = await doFetch(apiUrl + 'media/' + fileId, options);
+      return deleteResult;
+    } catch (error) {
+      throw new Error('deleteMedia failed: ' + error.message);
+    }
+  };
 
-  return {mediaArray, postMedia};
+
+  const putMedia = async (fileId, token, data) =>{
+    try {
+      const options = {
+        method:'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token,
+        },
+        body: JSON.stringify(data),
+      };
+      const putResult = await doFetch(apiUrl + 'media/' + fileId, options);
+      return putResult;
+    } catch (error) {
+      throw new Error('putMedia failed: ' + error.message);
+    }
+  };
+
+
+  return {mediaArray, postMedia, deleteMedia, putMedia, loading};
 };
 
 const useAuthentication = () => {
